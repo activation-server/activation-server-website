@@ -10,17 +10,29 @@ export const Header = () => {
 
   return (
     <header className="sticky top-0">
-      <div className="bg-neutral-800 text-white text-center p-2 text-sm">
+      <div className="bg-neutral-800 text-white text-center p-2 text-sm overflow-hidden">
         <div className="relative h-12 flex items-center">
-          <div className="animate-scroll-left whitespace-nowrap flex">
-            {Array.from({ length: 3 }).map((_, index) => (
-              <span
-                className="inline-block px-8 text-sm font-medium"
-                key={index}
-              >
-                {messages[0] || "Welcome to Activation Server!"}
-              </span>
-            ))}
+          <div className="animate-scroll-left scrolling-container whitespace-nowrap">
+            <div className="scrolling-content">
+              {Array.from({ length: 8 }).map((_, index) => (
+                <span
+                  className="inline-block px-8 text-sm font-medium"
+                  key={index}
+                >
+                  {messages[0] || "Welcome to Activation Server!"}
+                </span>
+              ))}
+            </div>
+            <div className="scrolling-content">
+              {Array.from({ length: 8 }).map((_, index) => (
+                <span
+                  className="inline-block px-8 text-sm font-medium"
+                  key={index + 8}
+                >
+                  {messages[0] || "Welcome to Activation Server!"}
+                </span>
+              ))}
+            </div>
           </div>
         </div>
       </div>

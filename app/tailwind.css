@@ -17,12 +17,23 @@ body {
       transform: translateX(0);
     }
     100% {
-      transform: translateX(-33.333%);
+      transform: translateX(-50%);
     }
   }
 
   .animate-scroll-left {
-    animation: scroll-left 8s linear infinite;
+    animation: scroll-left 30s linear infinite;
+  }
+
+  .scrolling-container {
+    display: flex;
+    width: 200%;
+  }
+
+  .scrolling-content {
+    flex: 0 0 50%;
+    display: flex;
+    white-space: nowrap;
   }
 
   .text-balance {
