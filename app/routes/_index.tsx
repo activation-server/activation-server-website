@@ -3,9 +3,34 @@ import { Header } from "~/components/Header";
 import { MainVisual } from "~/components/MainVisual";
 
 export const meta: MetaFunction = () => {
+  const title = "活性化サーバー | Activation Server";
+  const description = "活性化サーバーは、活性化を目的としたサーバーです。様々な活動やイベントが行われます。";
+  const url = "https://activation-server.com"; // 実際のURLに変更してください
+  const imageUrl = `${url}/actsrv-main-visual.png`;
+
   return [
-    { title: "Activation Server" },
-    { name: "description", content: "Welcome to Activation Server!" },
+    { title },
+    { name: "description", content: description },
+
+    // OGP Tags
+    { property: "og:title", content: title },
+    { property: "og:description", content: description },
+    { property: "og:type", content: "website" },
+    { property: "og:url", content: url },
+    { property: "og:image", content: imageUrl },
+    { property: "og:image:width", content: "1200" },
+    { property: "og:image:height", content: "630" },
+    { property: "og:site_name", content: "Activation Server" },
+    { property: "og:locale", content: "ja_JP" },
+
+    // Twitter Card Tags
+    { name: "twitter:card", content: "summary_large_image" },
+    { name: "twitter:title", content: title },
+    { name: "twitter:description", content: description },
+    { name: "twitter:image", content: imageUrl },
+
+    // Additional Meta Tags
+    { name: "theme-color", content: "#000000" },
   ];
 };
 
