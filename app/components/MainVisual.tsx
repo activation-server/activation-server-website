@@ -1,37 +1,26 @@
 export const MainVisual = () => {
-  const videoSources = [
-    "/main-visual-1.mov",
-    "/main-visual-2.mov",
-    "/main-visual-3.mov",
-    "/main-visual-4.mov",
-    "/main-visual-5.mov",
-  ];
-
-  // Select a random video source
-  const randomVideoSrc =
-    videoSources[Math.floor(Math.random() * videoSources.length)];
+  const discordInviteUrl = "https://discord.com/invite/BwtTvC8Fny?fbclid=PAZXh0bgNhZW0CMTEAAac1PFb-eN8Jh94RDx-Ej9NW2sYksBPX4LMdPLokE9mQfwvoWMe-girvS9dZww_aem_dcecfxWLJvu-LJkts3CUEw";
 
   return (
-    // <div className="relative w-full h-[400px] lg:w-3/5 lg:h-screen">
-    <div className="relative w-full">
-      <video
-        src={randomVideoSrc}
-        autoPlay
-        loop
-        muted
-        playsInline
-        className="w-full h-full object-cover"
-        crossOrigin="anonymous"
+    <a
+      href={discordInviteUrl}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="block w-full cursor-pointer hover:opacity-90 transition-opacity"
+    >
+      {/* Mobile version - display image */}
+      <img
+        src="/actsrv-main-visual-mob.png"
+        alt="活性化サーバー - Discordに参加"
+        className="w-full h-auto lg:hidden"
       />
-      <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center">
-        <div className="text-center">
-          <img
-            src="/icon-vertical-white.png"
-            alt="活性化サーバー"
-            className="h-32 lg:h-48 w-auto"
-          />
-        </div>
-      </div>
-    </div>
+
+      {/* Desktop version - display image */}
+      <img
+        src="/actsrv-main-visual.png"
+        alt="活性化サーバー - Discordに参加"
+        className="hidden lg:block w-full h-auto"
+      />
+    </a>
   );
 };

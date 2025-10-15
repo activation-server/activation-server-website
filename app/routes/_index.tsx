@@ -101,8 +101,8 @@ const MainContent = () => {
 
 export default function Index() {
   return (
-    <div className="flex flex-col lg:flex-row min-h-screen bg-white">
-      {/* Left Side - Image */}
+    <div className="w-full min-h-screen bg-white">
+      {/* Main Visual - Full Width */}
       <MainVisual />
 
       {/* Right Side - Content */}
