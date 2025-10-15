@@ -12,7 +12,8 @@ export const MainVisual = () => {
     videoSources[Math.floor(Math.random() * videoSources.length)];
 
   return (
-    <div className="relative w-full h-[400px] lg:w-3/5 lg:h-screen">
+    // <div className="relative w-full h-[400px] lg:w-3/5 lg:h-screen">
+    <div className="relative w-full">
       <video
         src={randomVideoSrc}
         autoPlay
@@ -23,9 +24,12 @@ export const MainVisual = () => {
         crossOrigin="anonymous"
       />
       <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center">
-        <div className="text-white text-center">
-          <h2 className="text-4xl lg:text-6xl font-bold mb-2">活性化</h2>
-          <h2 className="text-4xl lg:text-6xl font-bold mb-4">サーバー</h2>
+        <div className="text-center">
+          <img
+            src="/icon-vertical-white.png"
+            alt="活性化サーバー"
+            className="h-32 lg:h-48 w-auto"
+          />
         </div>
       </div>
     </div>

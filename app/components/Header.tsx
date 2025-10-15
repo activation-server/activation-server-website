@@ -11,7 +11,7 @@ export const Header = () => {
   return (
     <header className="sticky top-0">
       <div className="bg-neutral-800 text-white text-center p-2 text-sm overflow-hidden">
-        <div className="relative h-12 flex items-center">
+        <div className="relative h-8 flex items-center">
           <div className="animate-scroll-left scrolling-container whitespace-nowrap">
             <div className="scrolling-content">
               {Array.from({ length: 8 }).map((_, index) => (

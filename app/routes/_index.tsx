@@ -33,7 +33,7 @@ const MainContent = () => {
         {/* About Section */}
         <section className="mb-8">
           <h3 className="text-xl font-bold mb-4">活性化サーバーとは</h3>
-          <div className="bg-gray-200 h-32 flex items-center justify-center mb-6">
+          <div className="bg-gray-200 p-4 h-32 flex items-center justify-center mb-6">
             <span className="text-gray-600">
               活性化サーバーは、活性化を目的としたサーバーです。
               <br />
@@ -106,7 +106,7 @@ export default function Index() {
       <MainVisual />
 
       {/* Right Side - Content */}
-      <MainContent />
+      {/* <MainContent /> */}
     </div>
   );
 }
