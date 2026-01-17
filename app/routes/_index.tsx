@@ -194,6 +194,12 @@ export const EventSection = () => {
 };
 
 export const MemberSection = ({ members }: { members: any[] }) => {
+  // メンバーを3行に分割
+  const rows = 3;
+  const memberRows = Array.from({ length: rows }, (_, rowIndex) =>
+    members.filter((_, index) => index % rows === rowIndex)
+  );
+
   return (
     <section className="mb-16">
       <ScrollAnimation variant="slideUp" duration={1.4} delay={0.3}>
@@ -216,19 +222,48 @@ export const MemberSection = ({ members }: { members: any[] }) => {
         </div>
       </ScrollAnimation>
 
-      <StaggerContainer staggerDelay={0.15} className="grid grid-cols-3 md:grid-cols-5 lg:grid-cols-7 gap-6">
-        {members.map((member) => (
-          <StaggerItem key={member.id}>
-            <MemberCard
-              name={member.name}
-              avatar={member.avatar}
-              role={member.role}
-              bio={member.bio}
-              socialLinks={member.socialLinks}
-            />
-          </StaggerItem>
-        ))}
-      </StaggerContainer>
+      <ScrollAnimation variant="fadeIn" duration={1.2} delay={0.5}>
+        <div className="space-y-3 overflow-hidden">
+          {memberRows.map((rowMembers, rowIndex) => (
+            <div
+              key={rowIndex}
+              className="relative overflow-hidden"
+              style={{
+                paddingLeft: rowIndex % 2 === 1 ? '60px' : '0',
+              }}
+            >
+              <div className="flex gap-3 animate-scroll-left" style={{ width: '200%' }}>
+                {/* 元のコンテンツ */}
+                <div className="flex gap-3" style={{ flex: '0 0 50%' }}>
+                  {rowMembers.map((member) => (
+                    <MemberCard
+                      key={member.id}
+                      name={member.name}
+                      avatar={member.avatar}
+                      role={member.role}
+                      bio={member.bio}
+                      socialLinks={member.socialLinks}
+                    />
+                  ))}
+                </div>
+                {/* 複製コンテンツ（無限ループ用） */}
+                <div className="flex gap-3" style={{ flex: '0 0 50%' }}>
+                  {rowMembers.map((member) => (
+                    <MemberCard
+                      key={`${member.id}-duplicate`}
+                      name={member.name}
+                      avatar={member.avatar}
+                      role={member.role}
+                      bio={member.bio}
+                      socialLinks={member.socialLinks}
+                    />
+                  ))}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </ScrollAnimation>
     </section>
   );
 };
