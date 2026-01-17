@@ -17,7 +17,10 @@ import worksData from "~/data/works.json";
 import {
   getMembersFromSheet,
   getWorksFromSheet,
+  getEventsFromSheet,
   isWorkNew,
+  isEventUpcoming,
+  type Event,
 } from "~/utils/googleSheets.server";
 
 export const meta: MetaFunction = () => {
@@ -56,34 +59,50 @@ export const meta: MetaFunction = () => {
 export const loader = async () => {
   let members;
   let worksFromSheet;
+  let eventsFromSheet: Event[];
 
   try {
     // Google Sheetsからデータを取得
     members = await getMembersFromSheet();
     worksFromSheet = await getWorksFromSheet();
+    eventsFromSheet = await getEventsFromSheet();
   } catch (error) {
     // エラー時はローカルJSONにフォールバック
     console.warn("Failed to load from Google Sheets, using local JSON:", error);
     members = membersData;
     worksFromSheet = worksData;
+    eventsFromSheet = [];
   }
 
   // Map works with member details
-  const works = worksFromSheet.map((work) => ({
-    ...work,
-    isNew: isWorkNew(work),
-    members: work.memberIds.map((memberId) => {
-      const member = members.find((m) => m.id === memberId);
-      return member
-        ? { name: member.name, avatar: member.avatar }
-        : { name: "Unknown", avatar: "" };
-    }),
+  const works = worksFromSheet
+    .map((work) => ({
+      ...work,
+      isNew: isWorkNew(work),
+      members: work.memberIds.map((memberId) => {
+        const member = members.find((m) => m.id === memberId);
+        return member
+          ? { name: member.name, avatar: member.avatar }
+          : { name: "Unknown", avatar: "" };
+      }),
+    }))
+    .sort((a, b) => {
+      // 日付が新しい順にソート
+      if (!a.date) return 1;
+      if (!b.date) return -1;
+      return new Date(b.date).getTime() - new Date(a.date).getTime();
+    });
+
+  // Map events with isUpcoming flag
+  const events = eventsFromSheet.map((event) => ({
+    ...event,
+    isUpcoming: isEventUpcoming(event),
   }));
 
-  return { works, members };
+  return { works, members, events };
 };
 
-const MainContent = ({ works, members }: { works: any[]; members: any[] }) => {
+const MainContent = ({ works, members, events }: { works: any[]; members: any[]; events: any[] }) => {
   return (
     <div className="w-full  lg:h-screen lg:overflow-y-auto">
       {/* Hero Section - Full Width */}
@@ -91,7 +110,7 @@ const MainContent = ({ works, members }: { works: any[]; members: any[] }) => {
 
       {/* Content with padding */}
       <div className="p-6 lg:p-8 max-w-screen-xl mx-auto pb-32">
-        <EventSection />
+        <EventSection events={events} />
         <MemberSection members={members} />
         <WorksSection works={works} />
       </div>
@@ -159,7 +178,7 @@ export const HeroSection = () => {
   );
 };
 
-export const EventSection = () => {
+export const EventSection = ({ events }: { events: any[] }) => {
   return (
     <section className="mb-16">
       <ScrollAnimation variant="slideUp" duration={1.4} delay={0.3}>
@@ -183,31 +202,20 @@ export const EventSection = () => {
       </ScrollAnimation>
 
       <StaggerContainer staggerDelay={0.4} className="space-y-8">
-        {/* Upcoming Event */}
-        <StaggerItem>
-          <EventTicket
-            eventNumber="NO.02"
-            title="P.E"
-            date="2026.02.28"
-            description="音楽の身体性を育むイベント"
-            isUpcoming={true}
-            color="bg-blue-500"
-            image="PE/PE_KV.png"
-          />
-        </StaggerItem>
-
-        {/* Past Event */}
-        <StaggerItem>
-          <EventTicket
-            eventNumber="NO.01"
-            title="Gotz Green"
-            date="2025.07.20"
-            description="目指せ文化の三冠王"
-            isUpcoming={false}
-            color="bg-green-600"
-            image="/gotzgreen/gotzgreen-flyer.png"
-          />
-        </StaggerItem>
+        {events.map((event) => (
+          <StaggerItem key={event.id}>
+            <EventTicket
+              eventNumber={event.number}
+              title={event.title}
+              date={event.date}
+              description={event.description}
+              isUpcoming={event.isUpcoming}
+              color={event.color}
+              image={event.image}
+              link={event.link}
+            />
+          </StaggerItem>
+        ))}
       </StaggerContainer>
     </section>
   );
@@ -342,13 +350,13 @@ const DISCORD_INVITE_URL =
   "https://discord.com/invite/BwtTvC8Fny?fbclid=PAZXh0bgNhZW0CMTEAAac1PFb-eN8Jh94RDx-Ej9NW2sYksBPX4LMdPLokE9mQfwvoWMe-girvS9dZww_aem_dcecfxWLJvu-LJkts3CUEw";
 
 export default function Index() {
-  const { works, members } = useLoaderData<typeof loader>();
+  const { works, members, events } = useLoaderData<typeof loader>();
 
   return (
     <div className="w-full min-h-screen bg-[#eeeeee]">
       {/* Right Side - Content */}
       <Header />
-      <MainContent works={works} members={members} />
+      <MainContent works={works} members={members} events={events} />
       <BottomBar discordInviteUrl={DISCORD_INVITE_URL} />
     </div>
   );

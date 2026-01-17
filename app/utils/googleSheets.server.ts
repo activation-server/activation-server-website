@@ -69,6 +69,17 @@ export interface Work {
   };
 }
 
+export interface Event {
+  id: string;
+  number: string;
+  title: string;
+  date: string;
+  description?: string;
+  color?: string;
+  image?: string;
+  link?: string;
+}
+
 export async function getMembersFromSheet(): Promise<Member[]> {
   try {
     const sheets = await getGoogleSheetsClient();
@@ -129,6 +140,32 @@ export async function getWorksFromSheet(): Promise<Work[]> {
   }
 }
 
+export async function getEventsFromSheet(): Promise<Event[]> {
+  try {
+    const sheets = await getGoogleSheetsClient();
+    const response = await sheets.spreadsheets.values.get({
+      spreadsheetId: SHEET_ID,
+      range: "Events!A2:H", // A2から始めてヘッダーをスキップ
+    });
+
+    const rows = response.data.values || [];
+
+    return rows.map((row) => ({
+      id: row[0] || "",
+      number: row[1] || "",
+      title: row[2] || "",
+      date: row[3] || "",
+      description: row[4] || undefined,
+      color: row[5] || "bg-blue-500",
+      image: convertGoogleDriveUrl(row[6] || ""),
+      link: row[7] || undefined,
+    }));
+  } catch (error) {
+    console.error("Error fetching events from Google Sheets:", error);
+    throw error;
+  }
+}
+
 // isNewを動的に判定する関数（dateから30日以内ならtrue）
 export function isWorkNew(work: Work): boolean {
   if (!work.date) return false;
@@ -139,4 +176,15 @@ export function isWorkNew(work: Work): boolean {
   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
   return diffDays <= 30;
+}
+
+// イベントが今後のものか判定する関数
+export function isEventUpcoming(event: Event): boolean {
+  if (!event.date) return false;
+
+  const eventDate = new Date(event.date);
+  const now = new Date();
+  now.setHours(0, 0, 0, 0); // 時刻をリセット
+
+  return eventDate >= now;
 }

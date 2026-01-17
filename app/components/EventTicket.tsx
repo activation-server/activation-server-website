@@ -9,6 +9,7 @@ interface EventTicketProps {
   isUpcoming: boolean;
   image?: string;
   color?: string;
+  link?: string;
 }
 
 export function EventTicket({
@@ -19,8 +20,12 @@ export function EventTicket({
   isUpcoming,
   image,
   color = "bg-blue-500",
+  link,
 }: EventTicketProps) {
-  return (
+  // カラーコード（#で始まる）かTailwindクラスか判定
+  const isColorCode = color?.startsWith("#");
+
+  const TicketContent = (
     <motion.div
       className="relative group"
       initial={{ opacity: 0 }}
@@ -32,8 +37,9 @@ export function EventTicket({
       <div
         className={cn(
           "relative rounded-2xl overflow-hidden",
-          color
+          !isColorCode && color
         )}
+        style={isColorCode ? { backgroundColor: color } : undefined}
       >
         <div className="flex flex-col lg:flex-row">
           {/* Left Side - Event Info */}
@@ -94,4 +100,19 @@ export function EventTicket({
       </div>
     </motion.div>
   );
+
+  if (link) {
+    return (
+      <a
+        href={link}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="block cursor-pointer"
+      >
+        {TicketContent}
+      </a>
+    );
+  }
+
+  return TicketContent;
 }
