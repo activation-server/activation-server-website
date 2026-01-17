@@ -5,7 +5,7 @@
     "subtitle": "音楽イベント",
     "image": "/PE/PE_KV.png",
     "tags": ["イベント", "音楽", "かっこいい"],
-    "isNew": true,
+    "date": "2026-02-28",
     "socialLinks": {
       "twitter": "https://twitter.com",
       "instagram": "https://instagram.com"
@@ -18,7 +18,7 @@
     "subtitle": "文化イベント",
     "image": "/gotzgreen/18.png",
     "tags": ["イベント", "デザイン", "国内"],
-    "isNew": false,
+    "date": "2025-07-20",
     "socialLinks": {
       "twitter": "https://twitter.com",
       "website": "https://example.com"
@@ -31,7 +31,7 @@
     "subtitle": "グラフィックデザイン",
     "image": "/gotzgreen/gotzgreen.png",
     "tags": ["デザイン", "グラフィック", "シンプル"],
-    "isNew": false,
+    "date": "2025-07-20",
     "socialLinks": {
       "instagram": "https://instagram.com"
     },
@@ -43,7 +43,7 @@
     "subtitle": "楽曲制作",
     "image": "/gotzgreen/3D_-21.png",
     "tags": ["音楽", "制作", "かっこいい"],
-    "isNew": true,
+    "date": "2026-01-01",
     "socialLinks": {
       "twitter": "https://twitter.com"
     },
@@ -54,7 +54,7 @@
     "title": "Art Exhibition",
     "subtitle": "アート展示",
     "tags": ["アート", "展示", "やさしい", "国内"],
-    "isNew": false,
+    "date": "2025-07-20",
     "socialLinks": {
       "website": "https://example.com"
     },
@@ -65,7 +65,7 @@
     "title": "Collaboration",
     "subtitle": "コラボレーション",
     "tags": ["コラボ", "デザイン", "ユニーク"],
-    "isNew": false,
+    "date": "2025-07-20",
     "socialLinks": {
       "twitter": "https://twitter.com",
       "instagram": "https://instagram.com",

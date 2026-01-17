@@ -14,6 +14,11 @@ import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import membersData from "~/data/members.json";
 import worksData from "~/data/works.json";
+import {
+  getMembersFromSheet,
+  getWorksFromSheet,
+  isWorkNew,
+} from "~/utils/googleSheets.server";
 
 export const meta: MetaFunction = () => {
   const title = "活性化サーバー | Activation Server";
@@ -49,18 +54,33 @@ export const meta: MetaFunction = () => {
 };
 
 export const loader = async () => {
+  let members;
+  let worksFromSheet;
+
+  try {
+    // Google Sheetsからデータを取得
+    members = await getMembersFromSheet();
+    worksFromSheet = await getWorksFromSheet();
+  } catch (error) {
+    // エラー時はローカルJSONにフォールバック
+    console.warn("Failed to load from Google Sheets, using local JSON:", error);
+    members = membersData;
+    worksFromSheet = worksData;
+  }
+
   // Map works with member details
-  const works = worksData.map((work) => ({
+  const works = worksFromSheet.map((work) => ({
     ...work,
+    isNew: isWorkNew(work),
     members: work.memberIds.map((memberId) => {
-      const member = membersData.find((m) => m.id === memberId);
+      const member = members.find((m) => m.id === memberId);
       return member
         ? { name: member.name, avatar: member.avatar }
         : { name: "Unknown", avatar: "" };
     }),
   }));
 
-  return { works, members: membersData };
+  return { works, members };
 };
 
 const MainContent = ({ works, members }: { works: any[]; members: any[] }) => {
