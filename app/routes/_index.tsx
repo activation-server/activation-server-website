@@ -2,8 +2,13 @@ import type { MetaFunction } from "@remix-run/node";
 import { Header } from "~/components/Header";
 import { BottomBar } from "~/components/BottomBar";
 import { EventTicket } from "~/components/EventTicket";
-import { ScrollAnimation, StaggerContainer, StaggerItem } from "~/components/ScrollAnimation";
+import {
+  ScrollAnimation,
+  StaggerContainer,
+  StaggerItem,
+} from "~/components/ScrollAnimation";
 import { motion } from "framer-motion";
+import { useState, useEffect } from "react";
 
 export const meta: MetaFunction = () => {
   const title = "活性化サーバー | Activation Server";
@@ -45,20 +50,11 @@ export const loader = async () => {
 const MainContent = () => {
   return (
     <div className="w-full  lg:h-screen lg:overflow-y-auto">
-      {/* Header */}
+      {/* Hero Section - Full Width */}
+      <HeroSection />
 
-      {/* Right Side - Content */}
+      {/* Content with padding */}
       <div className="p-6 lg:p-8 max-w-screen-xl mx-auto pb-32">
-        <ScrollAnimation variant="fadeIn" duration={0.8}>
-          <section>
-            <img
-              src="icon/icon-horizontal.png"
-              alt="Activation Server Logo"
-              className="mb-6 mx-auto"
-            />
-          </section>
-        </ScrollAnimation>
-
         <EventSection />
       </div>
     </div>
@@ -66,32 +62,60 @@ const MainContent = () => {
 };
 
 export const HeroSection = () => {
+  const [VideoEffect, setVideoEffect] = useState<any>(null);
   const discordInviteUrl =
     "https://discord.com/invite/BwtTvC8Fny?fbclid=PAZXh0bgNhZW0CMTEAAac1PFb-eN8Jh94RDx-Ej9NW2sYksBPX4LMdPLokE9mQfwvoWMe-girvS9dZww_aem_dcecfxWLJvu-LJkts3CUEw";
 
+  // ランダムに動画を選択
+  const videos = [
+    "/main-visual/main-visual-1.mov",
+    "/main-visual/main-visual-2.mov",
+    "/main-visual/main-visual-3.mov",
+    "/main-visual/main-visual-4.mov",
+    "/main-visual/main-visual-5.mov",
+  ];
+  const randomVideo = videos[Math.floor(Math.random() * videos.length)];
+
+  // ランダムにエフェクトを選択
+  const effects = ["glitch", "ascii", "pixelate", "vhs"] as const;
+  const randomEffect = effects[Math.floor(Math.random() * effects.length)];
+
+  // クライアントサイドでのみVideoEffectをロード
+  useEffect(() => {
+    import("~/components/VideoEffect.client").then((module) => {
+      setVideoEffect(() => module.VideoEffect);
+    });
+  }, []);
+
   return (
-    <ScrollAnimation variant="scale" duration={0.8}>
+    <ScrollAnimation variant="scale" duration={1.4}>
       <motion.a
         href={discordInviteUrl}
         target="_blank"
         rel="noopener noreferrer"
-        className="block w-full cursor-pointer"
+        className="block w-full cursor-pointer overflow-hidden relative"
         whileHover={{ scale: 1.02 }}
-        transition={{ duration: 0.3 }}
+        transition={{ duration: 0.5 }}
       >
-        {/* Mobile version - display image */}
-        <img
-          src="/actsrv-main-visual-mob.png"
-          alt="活性化サーバー - Discordに参加"
-          className="w-full h-auto lg:hidden"
-        />
+        {VideoEffect ? (
+          <VideoEffect videoSrc={randomVideo} effectType={randomEffect} />
+        ) : (
+          <video
+            src={randomVideo}
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="w-full h-auto"
+          />
+        )}
 
-        {/* Desktop version - display image */}
-        <img
-          src="/actsrv-main-visual.png"
-          alt="活性化サーバー - Discordに参加"
-          className="hidden lg:block w-full h-auto"
-        />
+        {/* Center Text Overlay */}
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+          <h1 className="text-6xl md:text-[12rem] lg:text-[16rem] font-black text-white tracking-tighter">
+            ACTVSRV
+          </h1>
+        </div>
       </motion.a>
     </ScrollAnimation>
   );
@@ -100,28 +124,34 @@ export const HeroSection = () => {
 export const EventSection = () => {
   return (
     <section className="mb-8">
-      <ScrollAnimation variant="slideUp" duration={0.8} delay={0.2}>
-        <div className="relative mb-12">
-          <h2 className="text-7xl md:text-8xl lg:text-9xl font-black italic text-orange-500 mb-6 tracking-tighter scale-x-110">
+      <ScrollAnimation variant="slideUp" duration={1.4} delay={0.3}>
+        <div className="relative mb-6">
+          <h2 className="text-5xl md:text-8xl lg:text-9xl font-black italic text-orange-500 tracking-tighter scale-x-110">
             EVENTS
           </h2>
-          <h2 className="absolute top-0 left-0 text-7xl md:text-8xl lg:text-9xl font-black italic text-orange-500/20 translate-y-2 translate-x-2 -z-10 tracking-tighter scale-x-110" aria-hidden="true">
+          <h2
+            className="absolute top-0 left-0 text-5xl md:text-8xl lg:text-9xl font-black italic text-orange-500/20 translate-y-2 translate-x-2 -z-10 tracking-tighter scale-x-110"
+            aria-hidden="true"
+          >
             EVENTS
           </h2>
-          <h2 className="absolute top-0 left-0 text-7xl md:text-8xl lg:text-9xl font-black italic text-orange-500/10 translate-y-4 translate-x-4 -z-20 tracking-tighter scale-x-110" aria-hidden="true">
+          <h2
+            className="absolute top-0 left-0 text-5xl md:text-8xl lg:text-9xl font-black italic text-orange-500/10 translate-y-4 translate-x-4 -z-20 tracking-tighter scale-x-110"
+            aria-hidden="true"
+          >
             EVENTS
           </h2>
         </div>
       </ScrollAnimation>
 
-      <StaggerContainer staggerDelay={0.2} className="space-y-8">
+      <StaggerContainer staggerDelay={0.4} className="space-y-8">
         {/* Upcoming Event */}
         <StaggerItem>
           <EventTicket
             eventNumber="NO.02"
             title="P.E"
-            date="2026.02.15"
-            description="初回イベント"
+            date="2026.02.28"
+            description="音楽の身体性を育むイベント"
             isUpcoming={true}
             color="bg-blue-500"
             image="PE/PE_KV.png"
@@ -133,7 +163,7 @@ export const EventSection = () => {
           <EventTicket
             eventNumber="NO.01"
             title="Gotz Green"
-            date="2025.07.21"
+            date="2025.07.20"
             description="目指せ文化の三冠王"
             isUpcoming={false}
             color="bg-green-600"
@@ -150,7 +180,7 @@ const DISCORD_INVITE_URL =
 
 export default function Index() {
   return (
-    <div className="w-full min-h-screen bg-white">
+    <div className="w-full min-h-screen bg-[#eeeeee]">
       {/* Right Side - Content */}
       <Header />
       <MainContent />

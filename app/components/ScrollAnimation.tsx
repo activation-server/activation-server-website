@@ -41,12 +41,12 @@ export const ScrollAnimation = ({
   children,
   variant = "fadeIn",
   delay = 0,
-  duration = 0.6,
+  duration = 1.2,
   className = "",
   once = true,
 }: ScrollAnimationProps) => {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once, amount: 0.3 });
+  const isInView = useInView(ref, { once, amount: 0.2 });
 
   return (
     <motion.div
@@ -60,6 +60,7 @@ export const ScrollAnimation = ({
         ease: [0.25, 0.1, 0.25, 1],
       }}
       className={className}
+      style={{ willChange: "transform, opacity" }}
     >
       {children}
     </motion.div>
@@ -74,11 +75,11 @@ interface StaggerContainerProps {
 
 export const StaggerContainer = ({
   children,
-  staggerDelay = 0.1,
+  staggerDelay = 0.3,
   className = "",
 }: StaggerContainerProps) => {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, amount: 0.2 });
+  const isInView = useInView(ref, { once: true, amount: 0.15 });
 
   return (
     <motion.div
@@ -108,7 +109,7 @@ export const StaggerItem = ({ children, className = "" }: { children: ReactNode;
         hidden: { opacity: 0, y: 20 },
         visible: { opacity: 1, y: 0 },
       }}
-      transition={{ duration: 0.5, ease: [0.25, 0.1, 0.25, 1] }}
+      transition={{ duration: 0.9, ease: [0.25, 0.1, 0.25, 1] }}
       className={className}
     >
       {children}

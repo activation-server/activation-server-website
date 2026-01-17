@@ -26,7 +26,7 @@ export function EventTicket({
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       whileHover={isUpcoming ? { y: -8, rotate: 1, scale: 1.02 } : { opacity: 0.9 }}
-      transition={{ duration: 0.3, ease: "easeOut" }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
     >
       {/* Main Ticket */}
       <div
@@ -44,23 +44,23 @@ export function EventTicket({
 
             {/* Punch holes at perforation line */}
             {/* Mobile: horizontal at bottom, Desktop: vertical at right edge */}
-            <div className="absolute bottom-0 left-0 -translate-x-1/2 translate-y-1/2 w-8 h-8 bg-white rounded-full z-20 lg:top-0 lg:bottom-auto lg:left-auto lg:right-0 lg:translate-x-1/2 lg:-translate-y-1/2" />
-            <div className="absolute bottom-0 right-0 translate-x-1/2 translate-y-1/2 w-8 h-8 bg-white rounded-full z-20 lg:top-auto lg:bottom-0 lg:left-auto lg:right-0 lg:translate-x-1/2 lg:translate-y-1/2" />
+            <div className="absolute bottom-0 left-0 -translate-x-1/2 translate-y-1/2 w-8 h-8 bg-[#eeeeee] rounded-full z-20 lg:top-0 lg:bottom-auto lg:left-auto lg:right-0 lg:translate-x-1/2 lg:-translate-y-1/2" />
+            <div className="absolute bottom-0 right-0 translate-x-1/2 translate-y-1/2 w-8 h-8 bg-[#eeeeee] rounded-full z-20 lg:top-auto lg:bottom-0 lg:left-auto lg:right-0 lg:translate-x-1/2 lg:translate-y-1/2" />
 
             <div className="pl-2">
-              <div className="text-3xl font-black italic tracking-tighter scale-x-110 mb-4">{eventNumber}</div>
-              <h3 className="text-3xl lg:text-4xl font-black italic tracking-tighter scale-x-110 mb-2 leading-tight">{title}</h3>
-              <div className="text-sm opacity-90">{date}</div>
+              <div className="text-4xl lg:text-5xl font-black italic tracking-tighter scale-x-110 mb-4">{eventNumber}</div>
+              <h3 className="text-3xl lg:text-4xl font-black italic tracking-tighter scale-x-110 mb-3 leading-tight">{title}</h3>
+              <div className="text-xl lg:text-2xl font-bold opacity-90">{date}</div>
             </div>
 
             {description && (
-              <div className="text-xs opacity-75 mt-4 pl-2">{description}</div>
+              <div className="text-sm opacity-75 mt-4 pl-2">{description}</div>
             )}
           </div>
 
           {/* Right Side - Visual */}
           <div className="w-full lg:w-[70%] p-6 flex items-center justify-center relative">
-            <div className="bg-white rounded-2xl w-full aspect-video flex items-center justify-center overflow-hidden relative">
+            <div className="bg-white rounded-2xl w-full aspect-[18/9] flex items-center justify-center overflow-hidden relative">
               {image ? (
                 <img
                   src={image}
