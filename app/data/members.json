@@ -1,0 +1,111 @@
+[
+  {
+    "id": "member-1",
+    "name": "Designer A",
+    "avatar": "/gotzgreen/18.png",
+    "role": "Designer",
+    "bio": "グラフィックデザイナー",
+    "socialLinks": {
+      "twitter": "https://twitter.com",
+      "instagram": "https://instagram.com"
+    }
+  },
+  {
+    "id": "member-2",
+    "name": "Developer B",
+    "avatar": "/gotzgreen/3D_-21.png",
+    "role": "Developer",
+    "bio": "フルスタック開発者",
+    "socialLinks": {
+      "twitter": "https://twitter.com"
+    }
+  },
+  {
+    "id": "member-3",
+    "name": "Producer C",
+    "avatar": "/gotzgreen/gotzgreen.png",
+    "role": "Producer",
+    "bio": "イベントプロデューサー"
+  },
+  {
+    "id": "member-4",
+    "name": "Artist D",
+    "avatar": "/PE/PE_KV.png",
+    "role": "Artist",
+    "bio": "ビジュアルアーティスト",
+    "socialLinks": {
+      "instagram": "https://instagram.com",
+      "website": "https://example.com"
+    }
+  },
+  {
+    "id": "member-5",
+    "name": "Designer E",
+    "avatar": "/gotzgreen/3D_-21.png",
+    "role": "Designer",
+    "bio": "UI/UXデザイナー"
+  },
+  {
+    "id": "member-6",
+    "name": "Designer F",
+    "avatar": "/gotzgreen/18.png",
+    "role": "Designer",
+    "bio": "グラフィックデザイナー"
+  },
+  {
+    "id": "member-7",
+    "name": "Musician G",
+    "avatar": "/PE/PE_KV.png",
+    "role": "Musician",
+    "bio": "音楽プロデューサー"
+  },
+  {
+    "id": "member-8",
+    "name": "Producer H",
+    "avatar": "/gotzgreen/18.png",
+    "role": "Producer",
+    "bio": "音楽プロデューサー"
+  },
+  {
+    "id": "member-9",
+    "name": "Artist I",
+    "avatar": "/gotzgreen/3D_-21.png",
+    "role": "Artist",
+    "bio": "現代アーティスト"
+  },
+  {
+    "id": "member-10",
+    "name": "Curator J",
+    "avatar": "/gotzgreen/gotzgreen.png",
+    "role": "Curator",
+    "bio": "アートキュレーター"
+  },
+  {
+    "id": "member-11",
+    "name": "Team Lead K",
+    "avatar": "/PE/PE_KV.png",
+    "role": "Team Lead",
+    "bio": "プロジェクトリード"
+  },
+  {
+    "id": "member-12",
+    "name": "Designer L",
+    "avatar": "/gotzgreen/18.png",
+    "role": "Designer",
+    "bio": "ブランドデザイナー"
+  },
+  {
+    "id": "member-13",
+    "name": "Developer M",
+    "avatar": "/gotzgreen/gotzgreen.png",
+    "role": "Developer",
+    "bio": "バックエンド開発者"
+  },
+  {
+    "id": "member-14",
+    "name": "Artist N",
+    "avatar": "/gotzgreen/3D_-21.png",
+    "role": "Artist",
+    "bio": "3Dアーティスト"
+  }
+]

@@ -1,0 +1,76 @@
+[
+  {
+    "id": "work-1",
+    "title": "P.E",
+    "subtitle": "音楽イベント",
+    "image": "/PE/PE_KV.png",
+    "tags": ["イベント", "音楽", "かっこいい"],
+    "isNew": true,
+    "socialLinks": {
+      "twitter": "https://twitter.com",
+      "instagram": "https://instagram.com"
+    },
+    "memberIds": ["member-1", "member-2"]
+  },
+  {
+    "id": "work-2",
+    "title": "Gotz Green",
+    "subtitle": "文化イベント",
+    "image": "/gotzgreen/18.png",
+    "tags": ["イベント", "デザイン", "国内"],
+    "isNew": false,
+    "socialLinks": {
+      "twitter": "https://twitter.com",
+      "website": "https://example.com"
+    },
+    "memberIds": ["member-3", "member-4", "member-5"]
+  },
+  {
+    "id": "work-3",
+    "title": "Sample Work",
+    "subtitle": "グラフィックデザイン",
+    "image": "/gotzgreen/gotzgreen.png",
+    "tags": ["デザイン", "グラフィック", "シンプル"],
+    "isNew": false,
+    "socialLinks": {
+      "instagram": "https://instagram.com"
+    },
+    "memberIds": ["member-6"]
+  },
+  {
+    "id": "work-4",
+    "title": "Music Project",
+    "subtitle": "楽曲制作",
+    "image": "/gotzgreen/3D_-21.png",
+    "tags": ["音楽", "制作", "かっこいい"],
+    "isNew": true,
+    "socialLinks": {
+      "twitter": "https://twitter.com"
+    },
+    "memberIds": ["member-7", "member-8"]
+  },
+  {
+    "id": "work-5",
+    "title": "Art Exhibition",
+    "subtitle": "アート展示",
+    "tags": ["アート", "展示", "やさしい", "国内"],
+    "isNew": false,
+    "socialLinks": {
+      "website": "https://example.com"
+    },
+    "memberIds": ["member-9", "member-10"]
+  },
+  {
+    "id": "work-6",
+    "title": "Collaboration",
+    "subtitle": "コラボレーション",
+    "tags": ["コラボ", "デザイン", "ユニーク"],
+    "isNew": false,
+    "socialLinks": {
+      "twitter": "https://twitter.com",
+      "instagram": "https://instagram.com",
+      "website": "https://example.com"
+    },
+    "memberIds": ["member-11", "member-12", "member-13", "member-14"]
+  }
+]

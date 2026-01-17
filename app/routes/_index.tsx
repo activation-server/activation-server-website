@@ -1,8 +1,10 @@
 import type { MetaFunction } from "@remix-run/node";
+import { useLoaderData } from "@remix-run/react";
 import { Header } from "~/components/Header";
 import { BottomBar } from "~/components/BottomBar";
 import { EventTicket } from "~/components/EventTicket";
 import { WorkCard } from "~/components/WorkCard";
+import { MemberCard } from "~/components/MemberCard";
 import {
   ScrollAnimation,
   StaggerContainer,
@@ -10,6 +12,8 @@ import {
 } from "~/components/ScrollAnimation";
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
+import membersData from "~/data/members.json";
+import worksData from "~/data/works.json";
 
 export const meta: MetaFunction = () => {
   const title = "活性化サーバー | Activation Server";
@@ -45,10 +49,21 @@ export const meta: MetaFunction = () => {
 };
 
 export const loader = async () => {
-  return null;
+  // Map works with member details
+  const works = worksData.map((work) => ({
+    ...work,
+    members: work.memberIds.map((memberId) => {
+      const member = membersData.find((m) => m.id === memberId);
+      return member
+        ? { name: member.name, avatar: member.avatar }
+        : { name: "Unknown", avatar: "" };
+    }),
+  }));
+
+  return { works, members: membersData };
 };
 
-const MainContent = () => {
+const MainContent = ({ works, members }: { works: any[]; members: any[] }) => {
   return (
     <div className="w-full  lg:h-screen lg:overflow-y-auto">
       {/* Hero Section - Full Width */}
@@ -57,7 +72,8 @@ const MainContent = () => {
       {/* Content with padding */}
       <div className="p-6 lg:p-8 max-w-screen-xl mx-auto pb-32">
         <EventSection />
-        <WorksSection />
+        <MemberSection members={members} />
+        <WorksSection works={works} />
       </div>
     </div>
   );
@@ -177,7 +193,47 @@ export const EventSection = () => {
   );
 };
 
-export const WorksSection = () => {
+export const MemberSection = ({ members }: { members: any[] }) => {
+  return (
+    <section className="mb-16">
+      <ScrollAnimation variant="slideUp" duration={1.4} delay={0.3}>
+        <div className="relative mb-6">
+          <h2 className="text-5xl md:text-8xl lg:text-9xl font-black italic text-green-500 tracking-tighter scale-x-110">
+            MEMBERS
+          </h2>
+          <h2
+            className="absolute top-0 left-0 text-5xl md:text-8xl lg:text-9xl font-black italic text-green-500/20 translate-y-2 translate-x-2 -z-10 tracking-tighter scale-x-110"
+            aria-hidden="true"
+          >
+            MEMBERS
+          </h2>
+          <h2
+            className="absolute top-0 left-0 text-5xl md:text-8xl lg:text-9xl font-black italic text-green-500/10 translate-y-4 translate-x-4 -z-20 tracking-tighter scale-x-110"
+            aria-hidden="true"
+          >
+            MEMBERS
+          </h2>
+        </div>
+      </ScrollAnimation>
+
+      <StaggerContainer staggerDelay={0.15} className="grid grid-cols-3 md:grid-cols-5 lg:grid-cols-7 gap-6">
+        {members.map((member) => (
+          <StaggerItem key={member.id}>
+            <MemberCard
+              name={member.name}
+              avatar={member.avatar}
+              role={member.role}
+              bio={member.bio}
+              socialLinks={member.socialLinks}
+            />
+          </StaggerItem>
+        ))}
+      </StaggerContainer>
+    </section>
+  );
+};
+
+export const WorksSection = ({ works }: { works: any[] }) => {
   return (
     <section className="mb-16 -mx-6 lg:-mx-8 px-6 lg:px-8 py-12 bg-yellow-400">
       <div className="max-w-screen-xl mx-auto">
@@ -202,107 +258,19 @@ export const WorksSection = () => {
         </ScrollAnimation>
 
         <StaggerContainer staggerDelay={0.15} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
-          <StaggerItem>
-            <WorkCard
-              title="P.E"
-              subtitle="音楽イベント"
-              image="/PE/PE_KV.png"
-              isNew={true}
-              tags={["イベント", "音楽", "かっこいい"]}
-              socialLinks={{
-                twitter: "https://twitter.com",
-                instagram: "https://instagram.com",
-              }}
-              members={[
-                { name: "Designer A", avatar: "/gotzgreen/18.png" },
-                { name: "Developer B", avatar: "/gotzgreen/3D_-21.png" },
-              ]}
-            />
-          </StaggerItem>
-
-          <StaggerItem>
-            <WorkCard
-              title="Gotz Green"
-              subtitle="文化イベント"
-              image="/gotzgreen/18.png"
-              tags={["イベント", "デザイン", "国内"]}
-              socialLinks={{
-                twitter: "https://twitter.com",
-                website: "https://example.com",
-              }}
-              members={[
-                { name: "Producer C", avatar: "/gotzgreen/gotzgreen.png" },
-                { name: "Artist D", avatar: "/PE/PE_KV.png" },
-                { name: "Designer E", avatar: "/gotzgreen/3D_-21.png" },
-              ]}
-            />
-          </StaggerItem>
-
-          <StaggerItem>
-            <WorkCard
-              title="Sample Work"
-              subtitle="グラフィックデザイン"
-              image="/gotzgreen/gotzgreen.png"
-              tags={["デザイン", "グラフィック", "シンプル"]}
-              socialLinks={{
-                instagram: "https://instagram.com",
-              }}
-              members={[
-                { name: "Designer F", avatar: "/gotzgreen/18.png" },
-              ]}
-            />
-          </StaggerItem>
-
-          <StaggerItem>
-            <WorkCard
-              title="Music Project"
-              subtitle="楽曲制作"
-              image="/gotzgreen/3D_-21.png"
-              isNew={true}
-              tags={["音楽", "制作", "かっこいい"]}
-              socialLinks={{
-                twitter: "https://twitter.com",
-              }}
-              members={[
-                { name: "Musician G", avatar: "/PE/PE_KV.png" },
-                { name: "Producer H", avatar: "/gotzgreen/18.png" },
-              ]}
-            />
-          </StaggerItem>
-
-          <StaggerItem>
-            <WorkCard
-              title="Art Exhibition"
-              subtitle="アート展示"
-              tags={["アート", "展示", "やさしい", "国内"]}
-              socialLinks={{
-                website: "https://example.com",
-              }}
-              members={[
-                { name: "Artist I", avatar: "/gotzgreen/3D_-21.png" },
-                { name: "Curator J", avatar: "/gotzgreen/gotzgreen.png" },
-              ]}
-            />
-          </StaggerItem>
-
-          <StaggerItem>
-            <WorkCard
-              title="Collaboration"
-              subtitle="コラボレーション"
-              tags={["コラボ", "デザイン", "ユニーク"]}
-              socialLinks={{
-                twitter: "https://twitter.com",
-                instagram: "https://instagram.com",
-                website: "https://example.com",
-              }}
-              members={[
-                { name: "Team Lead K", avatar: "/PE/PE_KV.png" },
-                { name: "Designer L", avatar: "/gotzgreen/18.png" },
-                { name: "Developer M", avatar: "/gotzgreen/gotzgreen.png" },
-                { name: "Artist N", avatar: "/gotzgreen/3D_-21.png" },
-              ]}
-            />
-          </StaggerItem>
+          {works.map((work) => (
+            <StaggerItem key={work.id}>
+              <WorkCard
+                title={work.title}
+                subtitle={work.subtitle}
+                image={work.image}
+                isNew={work.isNew}
+                tags={work.tags}
+                socialLinks={work.socialLinks}
+                members={work.members}
+              />
+            </StaggerItem>
+          ))}
         </StaggerContainer>
       </div>
     </section>
@@ -313,11 +281,13 @@ const DISCORD_INVITE_URL =
   "https://discord.com/invite/BwtTvC8Fny?fbclid=PAZXh0bgNhZW0CMTEAAac1PFb-eN8Jh94RDx-Ej9NW2sYksBPX4LMdPLokE9mQfwvoWMe-girvS9dZww_aem_dcecfxWLJvu-LJkts3CUEw";
 
 export default function Index() {
+  const { works, members } = useLoaderData<typeof loader>();
+
   return (
     <div className="w-full min-h-screen bg-[#eeeeee]">
       {/* Right Side - Content */}
       <Header />
-      <MainContent />
+      <MainContent works={works} members={members} />
       <BottomBar discordInviteUrl={DISCORD_INVITE_URL} />
     </div>
   );
