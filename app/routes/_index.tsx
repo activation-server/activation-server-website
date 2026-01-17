@@ -18,7 +18,7 @@ import worksData from "~/data/works.json";
 export const meta: MetaFunction = () => {
   const title = "活性化サーバー | Activation Server";
   const description =
-    "活性化サー�ーは、活性化を目的としたサーバーです。様々な活動やイベントが行われます。";
+    "活性化サーバーは、活性化を目的としたサーバーです。様々な活動やイベントが行われます。";
   const url = "https://activation-server.com"; // 実際のURLに変更してください
   const imageUrl = `${url}/actsrv-main-visual.png`;
 
@@ -185,7 +185,7 @@ export const EventSection = () => {
             description="目指せ文化の三冠王"
             isUpcoming={false}
             color="bg-green-600"
-            image="/gotzgreen/18.png"
+            image="/gotzgreen/gotzgreen-flyer.png"
           />
         </StaggerItem>
       </StaggerContainer>
@@ -229,12 +229,15 @@ export const MemberSection = ({ members }: { members: any[] }) => {
               key={rowIndex}
               className="relative overflow-hidden"
               style={{
-                paddingLeft: rowIndex % 2 === 1 ? '60px' : '0',
+                paddingLeft: rowIndex % 2 === 1 ? "60px" : "0",
               }}
             >
-              <div className="flex gap-3 animate-scroll-left" style={{ width: '200%' }}>
+              <div
+                className="flex gap-3 animate-scroll-left"
+                style={{ width: "200%" }}
+              >
                 {/* 元のコンテンツ */}
-                <div className="flex gap-3" style={{ flex: '0 0 50%' }}>
+                <div className="flex gap-3" style={{ flex: "0 0 50%" }}>
                   {rowMembers.map((member) => (
                     <MemberCard
                       key={member.id}
@@ -247,7 +250,7 @@ export const MemberSection = ({ members }: { members: any[] }) => {
                   ))}
                 </div>
                 {/* 複製コンテンツ（無限ループ用） */}
-                <div className="flex gap-3" style={{ flex: '0 0 50%' }}>
+                <div className="flex gap-3" style={{ flex: "0 0 50%" }}>
                   {rowMembers.map((member) => (
                     <MemberCard
                       key={`${member.id}-duplicate`}
@@ -292,7 +295,10 @@ export const WorksSection = ({ works }: { works: any[] }) => {
           </div>
         </ScrollAnimation>
 
-        <StaggerContainer staggerDelay={0.15} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
+        <StaggerContainer
+          staggerDelay={0.15}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2"
+        >
           {works.map((work) => (
             <StaggerItem key={work.id}>
               <WorkCard
