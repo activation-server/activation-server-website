@@ -2,6 +2,7 @@ import type { MetaFunction } from "@remix-run/node";
 import { Header } from "~/components/Header";
 import { BottomBar } from "~/components/BottomBar";
 import { EventTicket } from "~/components/EventTicket";
+import { WorkCard } from "~/components/WorkCard";
 import {
   ScrollAnimation,
   StaggerContainer,
@@ -56,6 +57,7 @@ const MainContent = () => {
       {/* Content with padding */}
       <div className="p-6 lg:p-8 max-w-screen-xl mx-auto pb-32">
         <EventSection />
+        <WorksSection />
       </div>
     </div>
   );
@@ -123,7 +125,7 @@ export const HeroSection = () => {
 
 export const EventSection = () => {
   return (
-    <section className="mb-8">
+    <section className="mb-16">
       <ScrollAnimation variant="slideUp" duration={1.4} delay={0.3}>
         <div className="relative mb-6">
           <h2 className="text-5xl md:text-8xl lg:text-9xl font-black italic text-orange-500 tracking-tighter scale-x-110">
@@ -171,6 +173,138 @@ export const EventSection = () => {
           />
         </StaggerItem>
       </StaggerContainer>
+    </section>
+  );
+};
+
+export const WorksSection = () => {
+  return (
+    <section className="mb-16 -mx-6 lg:-mx-8 px-6 lg:px-8 py-12 bg-yellow-400">
+      <div className="max-w-screen-xl mx-auto">
+        <ScrollAnimation variant="slideUp" duration={1.4} delay={0.3}>
+          <div className="relative mb-8">
+            <h2 className="text-5xl md:text-8xl lg:text-9xl font-black italic text-purple-500 tracking-tighter scale-x-110">
+              WORKS
+            </h2>
+            <h2
+              className="absolute top-0 left-0 text-5xl md:text-8xl lg:text-9xl font-black italic text-purple-500/20 translate-y-2 translate-x-2 -z-10 tracking-tighter scale-x-110"
+              aria-hidden="true"
+            >
+              WORKS
+            </h2>
+            <h2
+              className="absolute top-0 left-0 text-5xl md:text-8xl lg:text-9xl font-black italic text-purple-500/10 translate-y-4 translate-x-4 -z-20 tracking-tighter scale-x-110"
+              aria-hidden="true"
+            >
+              WORKS
+            </h2>
+          </div>
+        </ScrollAnimation>
+
+        <StaggerContainer staggerDelay={0.15} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
+          <StaggerItem>
+            <WorkCard
+              title="P.E"
+              subtitle="音楽イベント"
+              image="/PE/PE_KV.png"
+              isNew={true}
+              tags={["イベント", "音楽", "かっこいい"]}
+              socialLinks={{
+                twitter: "https://twitter.com",
+                instagram: "https://instagram.com",
+              }}
+              members={[
+                { name: "Designer A", avatar: "/gotzgreen/18.png" },
+                { name: "Developer B", avatar: "/gotzgreen/3D_-21.png" },
+              ]}
+            />
+          </StaggerItem>
+
+          <StaggerItem>
+            <WorkCard
+              title="Gotz Green"
+              subtitle="文化イベント"
+              image="/gotzgreen/18.png"
+              tags={["イベント", "デザイン", "国内"]}
+              socialLinks={{
+                twitter: "https://twitter.com",
+                website: "https://example.com",
+              }}
+              members={[
+                { name: "Producer C", avatar: "/gotzgreen/gotzgreen.png" },
+                { name: "Artist D", avatar: "/PE/PE_KV.png" },
+                { name: "Designer E", avatar: "/gotzgreen/3D_-21.png" },
+              ]}
+            />
+          </StaggerItem>
+
+          <StaggerItem>
+            <WorkCard
+              title="Sample Work"
+              subtitle="グラフィックデザイン"
+              image="/gotzgreen/gotzgreen.png"
+              tags={["デザイン", "グラフィック", "シンプル"]}
+              socialLinks={{
+                instagram: "https://instagram.com",
+              }}
+              members={[
+                { name: "Designer F", avatar: "/gotzgreen/18.png" },
+              ]}
+            />
+          </StaggerItem>
+
+          <StaggerItem>
+            <WorkCard
+              title="Music Project"
+              subtitle="楽曲制作"
+              image="/gotzgreen/3D_-21.png"
+              isNew={true}
+              tags={["音楽", "制作", "かっこいい"]}
+              socialLinks={{
+                twitter: "https://twitter.com",
+              }}
+              members={[
+                { name: "Musician G", avatar: "/PE/PE_KV.png" },
+                { name: "Producer H", avatar: "/gotzgreen/18.png" },
+              ]}
+            />
+          </StaggerItem>
+
+          <StaggerItem>
+            <WorkCard
+              title="Art Exhibition"
+              subtitle="アート展示"
+              tags={["アート", "展示", "やさしい", "国内"]}
+              socialLinks={{
+                website: "https://example.com",
+              }}
+              members={[
+                { name: "Artist I", avatar: "/gotzgreen/3D_-21.png" },
+                { name: "Curator J", avatar: "/gotzgreen/gotzgreen.png" },
+              ]}
+            />
+          </StaggerItem>
+
+          <StaggerItem>
+            <WorkCard
+              title="Collaboration"
+              subtitle="コラボレーション"
+              tags={["コラボ", "デザイン", "ユニーク"]}
+              socialLinks={{
+                twitter: "https://twitter.com",
+                instagram: "https://instagram.com",
+                website: "https://example.com",
+              }}
+              members={[
+                { name: "Team Lead K", avatar: "/PE/PE_KV.png" },
+                { name: "Designer L", avatar: "/gotzgreen/18.png" },
+                { name: "Developer M", avatar: "/gotzgreen/gotzgreen.png" },
+                { name: "Artist N", avatar: "/gotzgreen/3D_-21.png" },
+              ]}
+            />
+          </StaggerItem>
+        </StaggerContainer>
+      </div>
     </section>
   );
 };
