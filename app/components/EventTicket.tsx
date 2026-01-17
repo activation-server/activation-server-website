@@ -32,7 +32,6 @@ export function EventTicket({
       <div
         className={cn(
           "relative rounded-2xl overflow-hidden",
-          isUpcoming ? "" : "opacity-70",
           color
         )}
       >
