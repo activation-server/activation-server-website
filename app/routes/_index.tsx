@@ -93,11 +93,23 @@ export const loader = async () => {
       return new Date(b.date).getTime() - new Date(a.date).getTime();
     });
 
-  // Map events with isUpcoming flag
-  const events = eventsFromSheet.map((event) => ({
-    ...event,
-    isUpcoming: isEventUpcoming(event),
-  }));
+  // Map events with isUpcoming flag and sort by date (newest first), then by number (highest first)
+  const events = eventsFromSheet
+    .map((event) => ({
+      ...event,
+      isUpcoming: isEventUpcoming(event),
+    }))
+    .sort((a, b) => {
+      // まず日付で比較（新しい順）
+      if (a.date && b.date) {
+        const dateDiff = new Date(b.date).getTime() - new Date(a.date).getTime();
+        if (dateDiff !== 0) return dateDiff;
+      }
+      // 日付が同じか無い場合は番号で比較（高い順）
+      const numA = parseInt(a.number) || 0;
+      const numB = parseInt(b.number) || 0;
+      return numB - numA;
+    });
 
   return { works, members, events };
 };

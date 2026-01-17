@@ -66,6 +66,8 @@ export interface Work {
     twitter?: string;
     instagram?: string;
     website?: string;
+    soundcloud?: string;
+    spotify?: string;
   };
 }
 
@@ -115,7 +117,7 @@ export async function getWorksFromSheet(): Promise<Work[]> {
     const sheets = await getGoogleSheetsClient();
     const response = await sheets.spreadsheets.values.get({
       spreadsheetId: SHEET_ID,
-      range: "Works!A2:J", // A2から始めてヘッダーをスキップ
+      range: "Works!A2:L", // A2から始めてヘッダーをスキップ
     });
 
     const rows = response.data.values || [];
@@ -132,6 +134,8 @@ export async function getWorksFromSheet(): Promise<Work[]> {
         twitter: row[7] || undefined,
         instagram: row[8] || undefined,
         website: row[9] || undefined,
+        soundcloud: row[10] || undefined,
+        spotify: row[11] || undefined,
       },
     }));
   } catch (error) {
