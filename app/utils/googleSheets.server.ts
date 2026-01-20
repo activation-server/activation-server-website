@@ -1,6 +1,50 @@
 import { google } from "googleapis";
+import { NEW_WORK_THRESHOLD_DAYS } from "~/constants";
 
 const SHEET_ID = process.env.GOOGLE_SHEET_ID;
+
+/**
+ * Google Sheetsの列インデックス定義
+ * シートの列順序が変更された場合はここを更新
+ */
+const COLUMNS = {
+  MEMBERS: {
+    ID: 0,
+    NAME: 1,
+    AVATAR: 2,
+    ROLE: 3,
+    BIO: 4,
+    TWITTER: 5,
+    INSTAGRAM: 6,
+    WEBSITE: 7,
+    SOUNDCLOUD: 8,
+    SPOTIFY: 9,
+  },
+  WORKS: {
+    ID: 0,
+    TITLE: 1,
+    SUBTITLE: 2,
+    IMAGE: 3,
+    TAGS: 4,
+    DATE: 5,
+    MEMBER_IDS: 6,
+    TWITTER: 7,
+    INSTAGRAM: 8,
+    WEBSITE: 9,
+    SOUNDCLOUD: 10,
+    SPOTIFY: 11,
+  },
+  EVENTS: {
+    ID: 0,
+    NUMBER: 1,
+    TITLE: 2,
+    DATE: 3,
+    DESCRIPTION: 4,
+    COLOR: 5,
+    IMAGE: 6,
+    LINK: 7,
+  },
+} as const;
 
 // Google DriveのリンクをIMG表示用URLに変換
 function convertGoogleDriveUrl(url: string): string {
@@ -18,7 +62,7 @@ function convertGoogleDriveUrl(url: string): string {
   }
 
   // /file/d/{ID}/view または /file/d/{ID}/edit 形式を検出
-  const match = url.match(/\/file\/d\/([^\/\?]+)/);
+  const match = url.match(/\/file\/d\/([^/?]+)/);
   if (match) {
     return `https://drive.google.com/thumbnail?id=${match[1]}&sz=w1000`;
   }
@@ -92,18 +136,19 @@ export async function getMembersFromSheet(): Promise<Member[]> {
 
     const rows = response.data.values || [];
 
+    const { MEMBERS: M } = COLUMNS;
     return rows.map((row) => ({
-      id: row[0] || "",
-      name: row[1] || "",
-      avatar: convertGoogleDriveUrl(row[2] || ""),
-      role: row[3] || "",
-      bio: row[4] || undefined,
+      id: row[M.ID] || "",
+      name: row[M.NAME] || "",
+      avatar: convertGoogleDriveUrl(row[M.AVATAR] || ""),
+      role: row[M.ROLE] || "",
+      bio: row[M.BIO] || undefined,
       socialLinks: {
-        twitter: row[5] || undefined,
-        instagram: row[6] || undefined,
-        website: row[7] || undefined,
-        soundcloud: row[8] || undefined,
-        spotify: row[9] || undefined,
+        twitter: row[M.TWITTER] || undefined,
+        instagram: row[M.INSTAGRAM] || undefined,
+        website: row[M.WEBSITE] || undefined,
+        soundcloud: row[M.SOUNDCLOUD] || undefined,
+        spotify: row[M.SPOTIFY] || undefined,
       },
     }));
   } catch (error) {
@@ -122,20 +167,21 @@ export async function getWorksFromSheet(): Promise<Work[]> {
 
     const rows = response.data.values || [];
 
+    const { WORKS: W } = COLUMNS;
     return rows.map((row) => ({
-      id: row[0] || "",
-      title: row[1] || "",
-      subtitle: row[2] || undefined,
-      image: convertGoogleDriveUrl(row[3] || ""),
-      tags: row[4] ? row[4].split(",").map((t: string) => t.trim()) : [],
-      date: row[5] || undefined,
-      memberIds: row[6] ? row[6].split(",").map((id: string) => id.trim()) : [],
+      id: row[W.ID] || "",
+      title: row[W.TITLE] || "",
+      subtitle: row[W.SUBTITLE] || undefined,
+      image: convertGoogleDriveUrl(row[W.IMAGE] || ""),
+      tags: row[W.TAGS] ? row[W.TAGS].split(",").map((t: string) => t.trim()) : [],
+      date: row[W.DATE] || undefined,
+      memberIds: row[W.MEMBER_IDS] ? row[W.MEMBER_IDS].split(",").map((id: string) => id.trim()) : [],
       socialLinks: {
-        twitter: row[7] || undefined,
-        instagram: row[8] || undefined,
-        website: row[9] || undefined,
-        soundcloud: row[10] || undefined,
-        spotify: row[11] || undefined,
+        twitter: row[W.TWITTER] || undefined,
+        instagram: row[W.INSTAGRAM] || undefined,
+        website: row[W.WEBSITE] || undefined,
+        soundcloud: row[W.SOUNDCLOUD] || undefined,
+        spotify: row[W.SPOTIFY] || undefined,
       },
     }));
   } catch (error) {
@@ -154,15 +200,16 @@ export async function getEventsFromSheet(): Promise<Event[]> {
 
     const rows = response.data.values || [];
 
+    const { EVENTS: E } = COLUMNS;
     return rows.map((row) => ({
-      id: row[0] || "",
-      number: row[1] || "",
-      title: row[2] || "",
-      date: row[3] || "",
-      description: row[4] || undefined,
-      color: row[5] || "bg-blue-500",
-      image: convertGoogleDriveUrl(row[6] || ""),
-      link: row[7] || undefined,
+      id: row[E.ID] || "",
+      number: row[E.NUMBER] || "",
+      title: row[E.TITLE] || "",
+      date: row[E.DATE] || "",
+      description: row[E.DESCRIPTION] || undefined,
+      color: row[E.COLOR] || "bg-blue-500",
+      image: convertGoogleDriveUrl(row[E.IMAGE] || ""),
+      link: row[E.LINK] || undefined,
     }));
   } catch (error) {
     console.error("Error fetching events from Google Sheets:", error);
@@ -170,7 +217,9 @@ export async function getEventsFromSheet(): Promise<Event[]> {
   }
 }
 
-// isNewを動的に判定する関数（dateから30日以内ならtrue）
+/**
+ * 作品が新着かどうかを判定（dateからNEW_WORK_THRESHOLD_DAYS日以内ならtrue）
+ */
 export function isWorkNew(work: Work): boolean {
   if (!work.date) return false;
 
@@ -179,7 +228,7 @@ export function isWorkNew(work: Work): boolean {
   const diffTime = Math.abs(now.getTime() - workDate.getTime());
   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-  return diffDays <= 30;
+  return diffDays <= NEW_WORK_THRESHOLD_DAYS;
 }
 
 // イベントが今後のものか判定する関数

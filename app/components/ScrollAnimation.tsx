@@ -102,7 +102,13 @@ export const StaggerContainer = ({
   );
 };
 
-export const StaggerItem = ({ children, className = "" }: { children: ReactNode; className?: string }) => {
+export const StaggerItem = ({
+  children,
+  className = "",
+}: {
+  children: ReactNode;
+  className?: string;
+}) => {
   return (
     <motion.div
       variants={{
@@ -110,26 +116,6 @@ export const StaggerItem = ({ children, className = "" }: { children: ReactNode;
         visible: { opacity: 1, y: 0 },
       }}
       transition={{ duration: 0.9, ease: [0.25, 0.1, 0.25, 1] }}
-      className={className}
-    >
-      {children}
-    </motion.div>
-  );
-};
-
-// Parallax scroll effect
-interface ParallaxProps {
-  children: ReactNode;
-  speed?: number;
-  className?: string;
-}
-
-export const Parallax = ({ children, speed = 0.5, className = "" }: ParallaxProps) => {
-  return (
-    <motion.div
-      style={{
-        y: speed,
-      }}
       className={className}
     >
       {children}

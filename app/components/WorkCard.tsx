@@ -1,6 +1,23 @@
 import { motion } from "framer-motion";
-import { FaXTwitter, FaInstagram, FaSoundcloud, FaSpotify } from "react-icons/fa6";
+import {
+  FaXTwitter,
+  FaInstagram,
+  FaSoundcloud,
+  FaSpotify,
+} from "react-icons/fa6";
 import { FiExternalLink } from "react-icons/fi";
+import { SocialIconButton } from "~/components/ui/SocialIconButton";
+
+/** ソーシャルリンクの設定 */
+const SOCIAL_LINK_CONFIG = [
+  { key: "twitter", Icon: FaXTwitter },
+  { key: "instagram", Icon: FaInstagram },
+  { key: "website", Icon: FiExternalLink },
+  { key: "soundcloud", Icon: FaSoundcloud },
+  { key: "spotify", Icon: FaSpotify },
+] as const;
+
+type SocialLinkKey = (typeof SOCIAL_LINK_CONFIG)[number]["key"];
 
 interface WorkCardProps {
   title: string;
@@ -72,61 +89,18 @@ export const WorkCard = ({
           {/* Social Icons */}
           {socialLinks && (
             <div className="flex gap-2 ml-4">
-              {socialLinks.twitter && (
-                <a
-                  href={socialLinks.twitter}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-8 h-8 bg-black rounded-full flex items-center justify-center text-white hover:bg-gray-800 transition-colors"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <FaXTwitter className="w-4 h-4" />
-                </a>
-              )}
-              {socialLinks.instagram && (
-                <a
-                  href={socialLinks.instagram}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-8 h-8 bg-black rounded-full flex items-center justify-center text-white hover:bg-gray-800 transition-colors"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <FaInstagram className="w-4 h-4" />
-                </a>
-              )}
-              {socialLinks.website && (
-                <a
-                  href={socialLinks.website}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-8 h-8 bg-black rounded-full flex items-center justify-center text-white hover:bg-gray-800 transition-colors"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <FiExternalLink className="w-4 h-4" />
-                </a>
-              )}
-              {socialLinks.soundcloud && (
-                <a
-                  href={socialLinks.soundcloud}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-8 h-8 bg-black rounded-full flex items-center justify-center text-white hover:bg-gray-800 transition-colors"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <FaSoundcloud className="w-4 h-4" />
-                </a>
-              )}
-              {socialLinks.spotify && (
-                <a
-                  href={socialLinks.spotify}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-8 h-8 bg-black rounded-full flex items-center justify-center text-white hover:bg-gray-800 transition-colors"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <FaSpotify className="w-4 h-4" />
-                </a>
-              )}
+              {SOCIAL_LINK_CONFIG.map(({ key, Icon }) => {
+                const url = socialLinks[key as SocialLinkKey];
+                if (!url) return null;
+                return (
+                  <SocialIconButton
+                    key={key}
+                    href={url}
+                    icon={<Icon className="w-4 h-4" />}
+                    onClick={(e) => e.stopPropagation()}
+                  />
+                );
+              })}
             </div>
           )}
         </div>
