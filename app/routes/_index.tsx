@@ -10,8 +10,9 @@ import {
   StaggerContainer,
   StaggerItem,
 } from "~/components/ScrollAnimation";
+import { SectionHeading } from "~/components/ui/SectionHeading";
 import { motion } from "framer-motion";
-import { useState, useEffect } from "react";
+import { useState, useEffect, type ComponentType } from "react";
 import membersData from "~/data/members.json";
 import worksData from "~/data/works.json";
 import {
@@ -21,13 +22,36 @@ import {
   isWorkNew,
   isEventUpcoming,
   type Event,
+  type Member,
+  type Work,
 } from "~/utils/googleSheets.server";
+import {
+  DISCORD_INVITE_URL,
+  MAIN_VISUAL_VIDEOS,
+  VIDEO_EFFECTS,
+  SITE_META,
+  type VideoEffectType,
+} from "~/constants";
+
+/** Work型にisNewとmembers情報を追加した型 */
+interface WorkWithDetails extends Work {
+  isNew: boolean;
+  members: { name: string; avatar: string }[];
+}
+
+/** Event型にisUpcomingフラグを追加した型 */
+interface EventWithStatus extends Event {
+  isUpcoming: boolean;
+}
+
+/** VideoEffectコンポーネントのProps型 */
+interface VideoEffectProps {
+  videoSrc: string;
+  effectType: VideoEffectType;
+}
 
 export const meta: MetaFunction = () => {
-  const title = "活性化サーバー | Activation Server";
-  const description =
-    "活性化サーバーは、活性化を目的としたサーバーです。様々な活動やイベントが行われます。";
-  const url = "https://activation-server.com"; // 実際のURLに変更してください
+  const { title, description, url, siteName, locale, themeColor } = SITE_META;
   const imageUrl = `${url}/actsrv-main-visual.png`;
 
   return [
@@ -42,8 +66,8 @@ export const meta: MetaFunction = () => {
     { property: "og:image", content: imageUrl },
     { property: "og:image:width", content: "1200" },
     { property: "og:image:height", content: "630" },
-    { property: "og:site_name", content: "Activation Server" },
-    { property: "og:locale", content: "ja_JP" },
+    { property: "og:site_name", content: siteName },
+    { property: "og:locale", content: locale },
 
     // Twitter Card Tags
     { name: "twitter:card", content: "summary_large_image" },
@@ -52,7 +76,7 @@ export const meta: MetaFunction = () => {
     { name: "twitter:image", content: imageUrl },
 
     // Additional Meta Tags
-    { name: "theme-color", content: "#000000" },
+    { name: "theme-color", content: themeColor },
   ];
 };
 
@@ -114,7 +138,13 @@ export const loader = async () => {
   return { works, members, events };
 };
 
-const MainContent = ({ works, members, events }: { works: any[]; members: any[]; events: any[] }) => {
+interface MainContentProps {
+  works: WorkWithDetails[];
+  members: Member[];
+  events: EventWithStatus[];
+}
+
+const MainContent = ({ works, members, events }: MainContentProps) => {
   return (
     <div className="w-full  lg:h-screen lg:overflow-y-auto">
       {/* Hero Section - Full Width */}
@@ -131,43 +161,34 @@ const MainContent = ({ works, members, events }: { works: any[]; members: any[];
 };
 
 export const HeroSection = () => {
-  const [VideoEffect, setVideoEffect] = useState<any>(null);
-  const discordInviteUrl =
-    "https://discord.com/invite/BwtTvC8Fny?fbclid=PAZXh0bgNhZW0CMTEAAac1PFb-eN8Jh94RDx-Ej9NW2sYksBPX4LMdPLokE9mQfwvoWMe-girvS9dZww_aem_dcecfxWLJvu-LJkts3CUEw";
+  const [VideoEffectComponent, setVideoEffectComponent] =
+    useState<ComponentType<VideoEffectProps> | null>(null);
 
-  // ランダムに動画を選択
-  const videos = [
-    "/main-visual/main-visual-1.mov",
-    "/main-visual/main-visual-2.mov",
-    "/main-visual/main-visual-3.mov",
-    "/main-visual/main-visual-4.mov",
-    "/main-visual/main-visual-5.mov",
-  ];
-  const randomVideo = videos[Math.floor(Math.random() * videos.length)];
-
-  // ランダムにエフェクトを選択
-  const effects = ["glitch", "ascii", "pixelate", "vhs"] as const;
-  const randomEffect = effects[Math.floor(Math.random() * effects.length)];
+  // ランダムに動画とエフェクトを選択
+  const randomVideo =
+    MAIN_VISUAL_VIDEOS[Math.floor(Math.random() * MAIN_VISUAL_VIDEOS.length)];
+  const randomEffect =
+    VIDEO_EFFECTS[Math.floor(Math.random() * VIDEO_EFFECTS.length)];
 
   // クライアントサイドでのみVideoEffectをロード
   useEffect(() => {
     import("~/components/VideoEffect.client").then((module) => {
-      setVideoEffect(() => module.VideoEffect);
+      setVideoEffectComponent(() => module.VideoEffect);
     });
   }, []);
 
   return (
     <ScrollAnimation variant="scale" duration={1.4}>
       <motion.a
-        href={discordInviteUrl}
+        href={DISCORD_INVITE_URL}
         target="_blank"
         rel="noopener noreferrer"
         className="block w-full cursor-pointer overflow-hidden relative"
         whileHover={{ scale: 1.02 }}
         transition={{ duration: 0.5 }}
       >
-        {VideoEffect ? (
-          <VideoEffect videoSrc={randomVideo} effectType={randomEffect} />
+        {VideoEffectComponent ? (
+          <VideoEffectComponent videoSrc={randomVideo} effectType={randomEffect} />
         ) : (
           <video
             src={randomVideo}
@@ -190,27 +211,11 @@ export const HeroSection = () => {
   );
 };
 
-export const EventSection = ({ events }: { events: any[] }) => {
+export const EventSection = ({ events }: { events: EventWithStatus[] }) => {
   return (
     <section className="mb-16">
       <ScrollAnimation variant="slideUp" duration={1.4} delay={0.3}>
-        <div className="relative mb-6">
-          <h2 className="text-5xl md:text-8xl lg:text-9xl font-black italic text-orange-500 tracking-tighter scale-x-110">
-            EVENTS
-          </h2>
-          <h2
-            className="absolute top-0 left-0 text-5xl md:text-8xl lg:text-9xl font-black italic text-orange-500/20 translate-y-2 translate-x-2 -z-10 tracking-tighter scale-x-110"
-            aria-hidden="true"
-          >
-            EVENTS
-          </h2>
-          <h2
-            className="absolute top-0 left-0 text-5xl md:text-8xl lg:text-9xl font-black italic text-orange-500/10 translate-y-4 translate-x-4 -z-20 tracking-tighter scale-x-110"
-            aria-hidden="true"
-          >
-            EVENTS
-          </h2>
-        </div>
+        <SectionHeading text="EVENTS" colorClass="text-orange-500" />
       </ScrollAnimation>
 
       <StaggerContainer staggerDelay={0.4} className="space-y-8">
@@ -233,33 +238,20 @@ export const EventSection = ({ events }: { events: any[] }) => {
   );
 };
 
-export const MemberSection = ({ members }: { members: any[] }) => {
-  // メンバーを3行に分割
-  const rows = 3;
-  const memberRows = Array.from({ length: rows }, (_, rowIndex) =>
-    members.filter((_, index) => index % rows === rowIndex)
+/** メンバーを指定行数に分割するヘルパー関数 */
+function distributeMembersToRows<T>(members: T[], rowCount: number): T[][] {
+  return Array.from({ length: rowCount }, (_, rowIndex) =>
+    members.filter((_, index) => index % rowCount === rowIndex)
   );
+}
+
+export const MemberSection = ({ members }: { members: Member[] }) => {
+  const memberRows = distributeMembersToRows(members, 3);
 
   return (
     <section className="mb-16">
       <ScrollAnimation variant="slideUp" duration={1.4} delay={0.3}>
-        <div className="relative mb-6">
-          <h2 className="text-5xl md:text-8xl lg:text-9xl font-black italic text-green-500 tracking-tighter scale-x-110">
-            MEMBERS
-          </h2>
-          <h2
-            className="absolute top-0 left-0 text-5xl md:text-8xl lg:text-9xl font-black italic text-green-500/20 translate-y-2 translate-x-2 -z-10 tracking-tighter scale-x-110"
-            aria-hidden="true"
-          >
-            MEMBERS
-          </h2>
-          <h2
-            className="absolute top-0 left-0 text-5xl md:text-8xl lg:text-9xl font-black italic text-green-500/10 translate-y-4 translate-x-4 -z-20 tracking-tighter scale-x-110"
-            aria-hidden="true"
-          >
-            MEMBERS
-          </h2>
-        </div>
+        <SectionHeading text="MEMBERS" colorClass="text-green-500" />
       </ScrollAnimation>
 
       <ScrollAnimation variant="fadeIn" duration={1.2} delay={0.5}>
@@ -284,8 +276,6 @@ export const MemberSection = ({ members }: { members: any[] }) => {
                       name={member.name}
                       avatar={member.avatar}
                       role={member.role}
-                      bio={member.bio}
-                      socialLinks={member.socialLinks}
                     />
                   ))}
                 </div>
@@ -297,8 +287,6 @@ export const MemberSection = ({ members }: { members: any[] }) => {
                       name={member.name}
                       avatar={member.avatar}
                       role={member.role}
-                      bio={member.bio}
-                      socialLinks={member.socialLinks}
                     />
                   ))}
                 </div>
@@ -311,27 +299,13 @@ export const MemberSection = ({ members }: { members: any[] }) => {
   );
 };
 
-export const WorksSection = ({ works }: { works: any[] }) => {
+export const WorksSection = ({ works }: { works: WorkWithDetails[] }) => {
   return (
     <section className="mb-16 -mx-6 lg:-mx-8 px-6 lg:px-8 py-12 bg-yellow-400">
       <div className="max-w-screen-xl mx-auto">
         <ScrollAnimation variant="slideUp" duration={1.4} delay={0.3}>
-          <div className="relative mb-8">
-            <h2 className="text-5xl md:text-8xl lg:text-9xl font-black italic text-purple-500 tracking-tighter scale-x-110">
-              WORKS
-            </h2>
-            <h2
-              className="absolute top-0 left-0 text-5xl md:text-8xl lg:text-9xl font-black italic text-purple-500/20 translate-y-2 translate-x-2 -z-10 tracking-tighter scale-x-110"
-              aria-hidden="true"
-            >
-              WORKS
-            </h2>
-            <h2
-              className="absolute top-0 left-0 text-5xl md:text-8xl lg:text-9xl font-black italic text-purple-500/10 translate-y-4 translate-x-4 -z-20 tracking-tighter scale-x-110"
-              aria-hidden="true"
-            >
-              WORKS
-            </h2>
+          <div className="mb-8">
+            <SectionHeading text="WORKS" colorClass="text-purple-500" />
           </div>
         </ScrollAnimation>
 
@@ -357,9 +331,6 @@ export const WorksSection = ({ works }: { works: any[] }) => {
     </section>
   );
 };
-
-const DISCORD_INVITE_URL =
-  "https://discord.com/invite/BwtTvC8Fny?fbclid=PAZXh0bgNhZW0CMTEAAac1PFb-eN8Jh94RDx-Ej9NW2sYksBPX4LMdPLokE9mQfwvoWMe-girvS9dZww_aem_dcecfxWLJvu-LJkts3CUEw";
 
 export default function Index() {
   const { works, members, events } = useLoaderData<typeof loader>();

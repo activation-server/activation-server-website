@@ -4,19 +4,9 @@ interface MemberCardProps {
   name: string;
   avatar: string;
   role: string;
-  bio?: string;
-  socialLinks?: {
-    twitter?: string;
-    instagram?: string;
-    website?: string;
-  };
 }
 
-export const MemberCard = ({
-  name,
-  avatar,
-  role,
-}: MemberCardProps) => {
+export const MemberCard = ({ name, avatar, role }: MemberCardProps) => {
   return (
     <motion.div
       className="flex-shrink-0 bg-white rounded-2xl p-4 flex items-center gap-3 transition-all duration-300 min-w-[200px]"
