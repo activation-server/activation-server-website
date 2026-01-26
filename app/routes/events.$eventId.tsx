@@ -78,7 +78,7 @@ export default function EventDetail() {
         <ScrollAnimation variant="scale" duration={1.2}>
           <div className="max-w-screen-xl mx-auto px-6 lg:px-8 pt-20 lg:pt-24 mb-6 lg:mb-8">
             <motion.div
-              className="relative overflow-hidden shadow-2xl"
+              className="relative overflow-hidden shadow-2xl lg:max-w-2xl lg:mx-auto"
               whileHover={{ scale: 1.01 }}
               transition={{ duration: 0.6 }}
             >
@@ -114,8 +114,8 @@ export default function EventDetail() {
         </ScrollAnimation>
 
         {/* Event Details */}
-        <div className="max-w-screen-xl mx-auto px-6 lg:px-8 pb-12 lg:pb-16">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="max-w-screen-xl mx-auto px-6 lg:px-12 pb-12 lg:pb-20">
+          <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-6 lg:gap-8">
             {/* Sidebar Info - モバイルでは上に、デスクトップでは右に */}
             <div className="space-y-4 lg:order-2">
               {/* Date & Time */}
@@ -163,12 +163,12 @@ export default function EventDetail() {
             </div>
 
             {/* Main Info */}
-            <div className="lg:col-span-2 lg:order-1 space-y-6">
+            <div className="lg:order-1 space-y-6">
               {/* Event Details */}
               {event.detail && (
                 <ScrollAnimation variant="slideUp" duration={1.2} delay={0.4}>
-                  <div className="bg-white rounded-2xl p-8 shadow-lg">
-                    <h2 className="text-2xl lg:text-3xl font-black italic tracking-tighter mb-4">
+                  <div className="bg-white rounded-2xl p-6 lg:p-8 shadow-lg">
+                    <h2 className="text-2xl lg:text-3xl font-black italic tracking-tighter mb-4 lg:mb-6">
                       DETAILS
                     </h2>
                     <div className="text-base lg:text-lg text-gray-700 leading-relaxed whitespace-pre-wrap">
@@ -190,7 +190,7 @@ export default function EventDetail() {
                     LOCATION
                   </h2>
                 </div>
-                <div className="w-full h-[300px] lg:h-[400px] rounded-xl overflow-hidden">
+                <div className="w-full h-[300px] lg:h-[500px] rounded-xl overflow-hidden">
                   <iframe
                     src={event.location}
                     width="100%"
@@ -208,7 +208,7 @@ export default function EventDetail() {
 
           {/* Back Link */}
           <ScrollAnimation variant="fadeIn" duration={0.8} delay={0.6}>
-            <div className="mt-12 text-center">
+            <div className="mt-8 lg:mt-12 text-center">
               <Link
                 to="/"
                 className="inline-flex items-center gap-2 text-sm font-bold hover:opacity-70 transition-opacity"
