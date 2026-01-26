@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "@remix-run/react";
 import { Button } from "./ui/button";
 import { Menu, X } from "lucide-react";
 import { motion } from "framer-motion";
@@ -14,14 +15,16 @@ export const Header = () => {
       transition={{ duration: 1.2, ease: [0.25, 0.1, 0.25, 1] }}
     >
       <div className="flex items-center justify-between p-4">
-        <motion.img
-          src="/icon/icon-horizontal.png"
-          alt="Activation Server Logo"
-          className="h-14"
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 1.0, delay: 0.3 }}
-        />
+        <Link to="/" className="cursor-pointer">
+          <motion.img
+            src="/icon/icon-horizontal.png"
+            alt="Activation Server Logo"
+            className="h-14"
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 1.0, delay: 0.3 }}
+          />
+        </Link>
         <motion.div
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}

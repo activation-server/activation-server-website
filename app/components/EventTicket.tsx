@@ -1,7 +1,9 @@
 import { cn } from "~/lib/utils";
 import { motion } from "framer-motion";
+import { Link } from "@remix-run/react";
 
 interface EventTicketProps {
+  eventId: string;
   eventNumber: string;
   title: string;
   date: string;
@@ -13,6 +15,7 @@ interface EventTicketProps {
 }
 
 export function EventTicket({
+  eventId,
   eventNumber,
   title,
   date,
@@ -101,18 +104,12 @@ export function EventTicket({
     </motion.div>
   );
 
-  if (link) {
-    return (
-      <a
-        href={link}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="block cursor-pointer"
-      >
-        {TicketContent}
-      </a>
-    );
-  }
-
-  return TicketContent;
+  return (
+    <Link
+      to={`/events/${eventId}`}
+      className="block cursor-pointer"
+    >
+      {TicketContent}
+    </Link>
+  );
 }

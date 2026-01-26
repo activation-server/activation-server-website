@@ -222,6 +222,7 @@ export const EventSection = ({ events }: { events: EventWithStatus[] }) => {
         {events.map((event) => (
           <StaggerItem key={event.id}>
             <EventTicket
+              eventId={event.id}
               eventNumber={event.number}
               title={event.title}
               date={event.date}

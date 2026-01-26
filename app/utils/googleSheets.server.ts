@@ -43,6 +43,9 @@ const COLUMNS = {
     COLOR: 5,
     IMAGE: 6,
     LINK: 7,
+    FLYER: 8,
+    LOCATION: 9,
+    DETAIL: 10,
   },
 } as const;
 
@@ -124,6 +127,9 @@ export interface Event {
   color?: string;
   image?: string;
   link?: string;
+  flyer?: string;
+  location?: string;
+  detail?: string;
 }
 
 export async function getMembersFromSheet(): Promise<Member[]> {
@@ -195,7 +201,7 @@ export async function getEventsFromSheet(): Promise<Event[]> {
     const sheets = await getGoogleSheetsClient();
     const response = await sheets.spreadsheets.values.get({
       spreadsheetId: SHEET_ID,
-      range: "Events!A2:H", // A2から始めてヘッダーをスキップ
+      range: "Events!A2:K", // A2から始めてヘッダーをスキップ
     });
 
     const rows = response.data.values || [];
@@ -210,6 +216,9 @@ export async function getEventsFromSheet(): Promise<Event[]> {
       color: row[E.COLOR] || "bg-blue-500",
       image: convertGoogleDriveUrl(row[E.IMAGE] || ""),
       link: row[E.LINK] || undefined,
+      flyer: convertGoogleDriveUrl(row[E.FLYER] || ""),
+      location: row[E.LOCATION] || undefined,
+      detail: row[E.DETAIL] || undefined,
     }));
   } catch (error) {
     console.error("Error fetching events from Google Sheets:", error);
