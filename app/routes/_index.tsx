@@ -256,7 +256,7 @@ export const MemberSection = ({ members }: { members: Member[] }) => {
       </ScrollAnimation>
 
       <ScrollAnimation variant="fadeIn" duration={1.2} delay={0.5}>
-        <div className="space-y-3 overflow-hidden">
+        <div className="space-y-3 overflow-hidden -mx-6 lg:mx-0">
           {memberRows.map((rowMembers, rowIndex) => (
             <div
               key={rowIndex}
