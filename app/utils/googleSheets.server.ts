@@ -245,8 +245,8 @@ export function isEventUpcoming(event: Event): boolean {
   if (!event.date) return false;
 
   const eventDate = new Date(event.date);
+  eventDate.setHours(23, 59, 59, 999); // イベント当日の23:59までupcomingとする
   const now = new Date();
-  now.setHours(0, 0, 0, 0); // 時刻をリセット
 
   return eventDate >= now;
 }
