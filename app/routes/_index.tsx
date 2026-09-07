@@ -3,8 +3,6 @@ import { useLoaderData } from "@remix-run/react";
 import { Header } from "~/components/Header";
 import { BottomBar } from "~/components/BottomBar";
 import { EventTicket } from "~/components/EventTicket";
-import { WorkCard } from "~/components/WorkCard";
-import { MemberCard } from "~/components/MemberCard";
 import {
   ScrollAnimation,
   StaggerContainer,
@@ -13,17 +11,10 @@ import {
 import { SectionHeading } from "~/components/ui/SectionHeading";
 import { motion } from "framer-motion";
 import { useState, useEffect, type ComponentType } from "react";
-import membersData from "~/data/members.json";
-import worksData from "~/data/works.json";
 import {
-  getMembersFromSheet,
-  getWorksFromSheet,
   getEventsFromSheet,
-  isWorkNew,
   isEventUpcoming,
   type Event,
-  type Member,
-  type Work,
 } from "~/utils/googleSheets.server";
 import {
   DISCORD_INVITE_URL,
@@ -32,12 +23,6 @@ import {
   SITE_META,
   type VideoEffectType,
 } from "~/constants";
-
-/** Work型にisNewとmembers情報を追加した型 */
-interface WorkWithDetails extends Work {
-  isNew: boolean;
-  members: { name: string; avatar: string }[];
-}
 
 /** Event型にisUpcomingフラグを追加した型 */
 interface EventWithStatus extends Event {
@@ -81,41 +66,15 @@ export const meta: MetaFunction = () => {
 };
 
 export const loader = async () => {
-  let members;
-  let worksFromSheet;
   let eventsFromSheet: Event[];
 
   try {
     // Google Sheetsからデータを取得
-    members = await getMembersFromSheet();
-    worksFromSheet = await getWorksFromSheet();
     eventsFromSheet = await getEventsFromSheet();
   } catch (error) {
-    // エラー時はローカルJSONにフォールバック
-    console.warn("Failed to load from Google Sheets, using local JSON:", error);
-    members = membersData;
-    worksFromSheet = worksData;
+    console.warn("Failed to load from Google Sheets:", error);
     eventsFromSheet = [];
   }
-
-  // Map works with member details
-  const works = worksFromSheet
-    .map((work) => ({
-      ...work,
-      isNew: isWorkNew(work),
-      members: work.memberIds.map((memberId) => {
-        const member = members.find((m) => m.id === memberId);
-        return member
-          ? { name: member.name, avatar: member.avatar }
-          : { name: "Unknown", avatar: "" };
-      }),
-    }))
-    .sort((a, b) => {
-      // 日付が新しい順にソート
-      if (!a.date) return 1;
-      if (!b.date) return -1;
-      return new Date(b.date).getTime() - new Date(a.date).getTime();
-    });
 
   // Map events with isUpcoming flag and sort by date (newest first), then by number (highest first)
   const events = eventsFromSheet
@@ -135,16 +94,14 @@ export const loader = async () => {
       return numB - numA;
     });
 
-  return { works, members, events };
+  return { events };
 };
 
 interface MainContentProps {
-  works: WorkWithDetails[];
-  members: Member[];
   events: EventWithStatus[];
 }
 
-const MainContent = ({ works, members, events }: MainContentProps) => {
+const MainContent = ({ events }: MainContentProps) => {
   return (
     <div className="w-full  lg:h-screen lg:overflow-y-auto">
       {/* Hero Section - Full Width */}
@@ -153,8 +110,6 @@ const MainContent = ({ works, members, events }: MainContentProps) => {
       {/* Content with padding */}
       <div className="p-6 lg:p-8 max-w-screen-xl mx-auto pb-32">
         <EventSection events={events} />
-        <MemberSection members={members} />
-        <WorksSection works={works} />
       </div>
     </div>
   );
@@ -239,108 +194,14 @@ export const EventSection = ({ events }: { events: EventWithStatus[] }) => {
   );
 };
 
-/** メンバーを指定行数に分割するヘルパー関数 */
-function distributeMembersToRows<T>(members: T[], rowCount: number): T[][] {
-  return Array.from({ length: rowCount }, (_, rowIndex) =>
-    members.filter((_, index) => index % rowCount === rowIndex)
-  );
-}
-
-export const MemberSection = ({ members }: { members: Member[] }) => {
-  const memberRows = distributeMembersToRows(members, 3);
-
-  return (
-    <section className="mb-16">
-      <ScrollAnimation variant="slideUp" duration={1.4} delay={0.3}>
-        <SectionHeading text="MEMBERS" colorClass="text-green-500" />
-      </ScrollAnimation>
-
-      <ScrollAnimation variant="fadeIn" duration={1.2} delay={0.5}>
-        <div className="space-y-3 overflow-hidden -mx-6 lg:mx-0">
-          {memberRows.map((rowMembers, rowIndex) => (
-            <div
-              key={rowIndex}
-              className="relative overflow-hidden"
-              style={{
-                paddingLeft: rowIndex % 2 === 1 ? "60px" : "0",
-              }}
-            >
-              <div
-                className="flex gap-3 animate-scroll-left"
-                style={{ width: "200%" }}
-              >
-                {/* 元のコンテンツ */}
-                <div className="flex gap-3" style={{ flex: "0 0 50%" }}>
-                  {rowMembers.map((member) => (
-                    <MemberCard
-                      key={member.id}
-                      name={member.name}
-                      avatar={member.avatar}
-                      role={member.role}
-                    />
-                  ))}
-                </div>
-                {/* 複製コンテンツ（無限ループ用） */}
-                <div className="flex gap-3" style={{ flex: "0 0 50%" }}>
-                  {rowMembers.map((member) => (
-                    <MemberCard
-                      key={`${member.id}-duplicate`}
-                      name={member.name}
-                      avatar={member.avatar}
-                      role={member.role}
-                    />
-                  ))}
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </ScrollAnimation>
-    </section>
-  );
-};
-
-export const WorksSection = ({ works }: { works: WorkWithDetails[] }) => {
-  return (
-    <section className="mb-16 -mx-6 lg:-mx-8 px-6 lg:px-8 py-12 bg-yellow-400">
-      <div className="max-w-screen-xl mx-auto">
-        <ScrollAnimation variant="slideUp" duration={1.4} delay={0.3}>
-          <div className="mb-8">
-            <SectionHeading text="WORKS" colorClass="text-purple-500" />
-          </div>
-        </ScrollAnimation>
-
-        <StaggerContainer
-          staggerDelay={0.15}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2"
-        >
-          {works.map((work) => (
-            <StaggerItem key={work.id}>
-              <WorkCard
-                title={work.title}
-                subtitle={work.subtitle}
-                image={work.image}
-                isNew={work.isNew}
-                tags={work.tags}
-                socialLinks={work.socialLinks}
-                members={work.members}
-              />
-            </StaggerItem>
-          ))}
-        </StaggerContainer>
-      </div>
-    </section>
-  );
-};
-
 export default function Index() {
-  const { works, members, events } = useLoaderData<typeof loader>();
+  const { events } = useLoaderData<typeof loader>();
 
   return (
     <div className="w-full min-h-screen bg-[#eeeeee]">
       {/* Right Side - Content */}
       <Header />
-      <MainContent works={works} members={members} events={events} />
+      <MainContent events={events} />
       <BottomBar discordInviteUrl={DISCORD_INVITE_URL} />
     </div>
   );
